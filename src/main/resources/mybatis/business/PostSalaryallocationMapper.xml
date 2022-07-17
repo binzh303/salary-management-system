@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.salary.project.business.salaryallocation.mapper.PostSalaryallocationMapper">
+    
+    <resultMap type="PostSalaryallocation" id="PostSalaryallocationResult">
+        <result property="id"    column="id"    />
+        <result property="postId"    column="post_id"    />
+        <result property="salaryAllocationId"    column="salary_allocation_id"    />
+    </resultMap>
+
+    <sql id="selectPostSalaryallocationVo">
+        select id, post_id, salary_allocation_id from tbl_post_salaryallocation
+    </sql>
+
+    <select id="selectPostSalaryallocationList" parameterType="PostSalaryallocation" resultMap="PostSalaryallocationResult">
+        <include refid="selectPostSalaryallocationVo"/>
+        <where>  
+            <if test="postId != null "> and post_id = #{postId}</if>
+            <if test="salaryAllocationId != null "> and salary_allocation_id = #{salaryAllocationId}</if>
+        </where>
+    </select>
+    
+    <select id="selectPostSalaryallocationById" parameterType="Long" resultMap="PostSalaryallocationResult">
+        <include refid="selectPostSalaryallocationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPostSalaryallocation" parameterType="PostSalaryallocation" useGeneratedKeys="true" keyProperty="id">
+        insert into tbl_post_salaryallocation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="postId != null">post_id,</if>
+            <if test="salaryAllocationId != null">salary_allocation_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="postId != null">#{postId},</if>
+            <if test="salaryAllocationId != null">#{salaryAllocationId},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePostSalaryallocation" parameterType="PostSalaryallocation">
+        update tbl_post_salaryallocation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="postId != null">post_id = #{postId},</if>
+            <if test="salaryAllocationId != null">salary_allocation_id = #{salaryAllocationId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePostSalaryallocationById" parameterType="Long">
+        delete from tbl_post_salaryallocation where id = #{id}
+    </delete>
+
+    <delete id="deletePostSalaryallocationByIds" parameterType="String">
+        delete from tbl_post_salaryallocation where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteBySalaryId" parameterType="String">
+        delete from tbl_post_salaryallocation where salary_allocation_id = #{id}
+    </delete>
+
+</mapper>

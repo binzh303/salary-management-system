@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.salary.project.business.detail.mapper.AccountDetailMapper">
+    
+    <resultMap type="AccountDetail" id="AccountDetailResult">
+        <result property="id"    column="id"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="allocationId"    column="allocation_id"    />
+        <result property="allocationName"    column="allocation_name"    />
+        <result property="type"    column="type"    />
+        <result property="money"    column="money"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectAccountDetailVo">
+        select id, account_id, allocation_id, allocation_name, type, money, create_time from tbl_account_detail
+    </sql>
+
+    <select id="selectAccountDetailList" parameterType="AccountDetail" resultMap="AccountDetailResult">
+        <include refid="selectAccountDetailVo"/>
+        <where>  
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="allocationId != null "> and allocation_id = #{allocationId}</if>
+            <if test="allocationName != null  and allocationName != ''"> and allocation_name like concat('%', #{allocationName}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="money != null "> and money = #{money}</if>
+        </where>
+    </select>
+    
+    <select id="selectAccountDetailById" parameterType="Long" resultMap="AccountDetailResult">
+        <include refid="selectAccountDetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAccountDetail" parameterType="AccountDetail">
+        insert into tbl_account_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="accountId != null">account_id,</if>
+            <if test="allocationId != null">allocation_id,</if>
+            <if test="allocationName != null">allocation_name,</if>
+            <if test="type != null">type,</if>
+            <if test="money != null">money,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="accountId != null">#{accountId},</if>
+            <if test="allocationId != null">#{allocationId},</if>
+            <if test="allocationName != null">#{allocationName},</if>
+            <if test="type != null">#{type},</if>
+            <if test="money != null">#{money},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAccountDetail" parameterType="AccountDetail">
+        update tbl_account_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="allocationId != null">allocation_id = #{allocationId},</if>
+            <if test="allocationName != null">allocation_name = #{allocationName},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAccountDetailById" parameterType="Long">
+        delete from tbl_account_detail where id = #{id}
+    </delete>
+
+    <delete id="deleteAccountDetailByIds" parameterType="String">
+        delete from tbl_account_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

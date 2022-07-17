@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增薪资配置')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-allocation-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">项目名称：</label>
+                <div class="col-sm-8">
+                    <input name="name" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">项目类型：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('salary_allocation_type')}">
+                        <input type="radio" th:id="${'type_' + dict.dictCode}" name="type" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${'type_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">计算规则：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('salary_allocation_rule')}">
+                        <input type="radio" th:id="${'rule_' + dict.dictCode}" name="rule" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${'rule_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">涉及金额：</label>
+                <div class="col-sm-8">
+                    <input name="money" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('state')}">
+                        <input type="radio" th:id="${'state_' + dict.dictCode}" name="state" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${'state_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">等级：</label>
+                <div class="col-sm-8">
+                    <select name="grade" class="form-control m-b" th:with="type=${@dict.getType('salary_allocation_grade')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "salary/allocation"
+        $("#form-allocation-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-allocation-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

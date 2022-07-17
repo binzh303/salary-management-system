@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增岗位-薪资配置关联')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-salaryallocation-add">
+            <div class="form-group">
+                <label class="col-sm-3 control-label is-required">岗位：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" th:value="${post.postName}" type="text" name="jobName" id="jobName" readonly>
+                </div>
+            </div>
+            <input class="form-control" th:value="${post.postId}" type="hidden" name="postId" id="postId" >
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label">工资项：</label>
+                        <div class="col-xs-10">
+                            <label th:each="salaryAllocation:${salaryAllocations}" class="check-box">
+                                <input name="salaryAllocationId" type="checkbox" th:value="${salaryAllocation.id}" th:checked="${salaryAllocation.flag}" th:text="${salaryAllocation.name}">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--<div class="row">-->
+        <!--<div class="col-sm-offset-5 col-sm-10">-->
+            <!--<button type="button" class="btn btn-sm btn-primary" onclick="submitHandler()"><i class="fa fa-check"></i>保 存</button>&nbsp;-->
+            <!--<button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-reply-all"></i>关 闭 </button>-->
+        <!--</div>-->
+    <!--</div>-->
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "business/salaryallocation"
+        $("#form-salaryallocation-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+                var data = $("#form-salaryallocation-add").serializeArray();
+                var salaryAllocationIds = $.form.selectCheckeds("salaryAllocationId");
+                var postId = $("#postId").val();
+                data.push({"name": "salaryAllocationIds", "value": salaryAllocationIds});
+                data.push({"name": "postId", "value": postId});
+                $.operate.saveTab(prefix + "/add", data);
+        }
+        // function submitHandler() {
+        //     if ($.validate.form()) {
+        //         $.operate.save(prefix + "/add", $('#form-salaryallocation-add').serialize());
+        //     }
+        // }
+    </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.salary.project.business.level.mapper.LevelMapper">
+    
+    <resultMap type="Level" id="LevelResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="dateStart"    column="date_start"    />
+        <result property="dateEnd"    column="date_end"    />
+        <result property="reason"    column="reason"    />
+        <result property="approvalId"    column="approval_id"    />
+        <result property="approvalName"    column="approval_name"    />
+        <result property="result"    column="result"    />
+        <result property="approvalReason"    column="approval_reason"    />
+        <result property="approvalDate"    column="approval_date"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectLevelVo">
+        select id, user_id, user_name, date_start, date_end, reason, approval_id, approval_name, result, approval_reason, approval_date, create_time from tbl_level
+    </sql>
+
+    <select id="selectLevelList" parameterType="Level" resultMap="LevelResult">
+        <include refid="selectLevelVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="dateStart != null  and dateStart != ''"> and date_start = #{dateStart}</if>
+            <if test="dateEnd != null  and dateEnd != ''"> and date_end = #{dateEnd}</if>
+            <if test="reason != null  and reason != ''"> and reason = #{reason}</if>
+            <if test="approvalId != null "> and approval_id = #{approvalId}</if>
+            <if test="approvalName != null  and approvalName != ''"> and approval_name like concat('%', #{approvalName}, '%')</if>
+            <if test="result != null  and result != ''"> and result = #{result}</if>
+            <if test="approvalReason != null  and approvalReason != ''"> and approval_reason = #{approvalReason}</if>
+            <if test="approvalDate != null  and approvalDate != ''"> and approval_date = #{approvalDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectLevelById" parameterType="Long" resultMap="LevelResult">
+        <include refid="selectLevelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLevel" parameterType="Level" useGeneratedKeys="true" keyProperty="id">
+        insert into tbl_level
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="dateStart != null">date_start,</if>
+            <if test="dateEnd != null">date_end,</if>
+            <if test="reason != null">reason,</if>
+            <if test="approvalId != null">approval_id,</if>
+            <if test="approvalName != null">approval_name,</if>
+            <if test="result != null">result,</if>
+            <if test="approvalReason != null">approval_reason,</if>
+            <if test="approvalDate != null">approval_date,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="dateStart != null">#{dateStart},</if>
+            <if test="dateEnd != null">#{dateEnd},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="approvalId != null">#{approvalId},</if>
+            <if test="approvalName != null">#{approvalName},</if>
+            <if test="result != null">#{result},</if>
+            <if test="approvalReason != null">#{approvalReason},</if>
+            <if test="approvalDate != null">#{approvalDate},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLevel" parameterType="Level">
+        update tbl_level
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="dateStart != null">date_start = #{dateStart},</if>
+            <if test="dateEnd != null">date_end = #{dateEnd},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="approvalId != null">approval_id = #{approvalId},</if>
+            <if test="approvalName != null">approval_name = #{approvalName},</if>
+            <if test="result != null">result = #{result},</if>
+            <if test="approvalReason != null">approval_reason = #{approvalReason},</if>
+            <if test="approvalDate != null">approval_date = #{approvalDate},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLevelById" parameterType="Long">
+        delete from tbl_level where id = #{id}
+    </delete>
+
+    <delete id="deleteLevelByIds" parameterType="String">
+        delete from tbl_level where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
